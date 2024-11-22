@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import { Editor } from "react-draft-wysiwyg";
 import htmlToDraft from 'html-to-draftjs';
+import PromptAPI from './PromptAPI';
+import processInlineStyleRanges from './processInlineStyle'
+import styleObject from './styleObject';
 
 function HtmlConvert({ htmlContent }) {
   // const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -11,7 +14,7 @@ function HtmlConvert({ htmlContent }) {
   useEffect(() => {
     if (htmlContent) {
       const html = `<div id="readability-page-1" class="page"><div><div><p><span><span> &nbsp;</span>Insertion in Trie</span><a href="github.com/LeetCode-Feedback/LeetCode-Feedback/issues" target="_blank" rel="noopener noreferrer">Report Issue</a></p></div><div>
-      <p>We have talked about insertion in a BST in another card (<a href="leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/">Introduction to Data Structure - Binary Search Tree</a>).</p>
+      <h1>We have talked about insertion in a BST in another card (<a href="leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/">Introduction to Data Structure - Binary Search Tree</a>).</h1>
       <blockquote>
       <p>Question:</p>
       <p>Do you remember how to insert a new node in a binary search tree? </p>
@@ -40,14 +43,7 @@ function HtmlConvert({ htmlContent }) {
           const newEditorState = EditorState.createWithContent(contentState);
           const rawContent = convertToRaw(newEditorState.getCurrentContent());
 
-          const styleObject = {
-            "bold": {"bold" : true}, 
-            "italic" : {"italic" : true},
-            "underline" : {"underline" : true},
-            "strikethrough" : {"strikethrough" : true},
-          }
-
-          rawContent.blocks.forEach(block => {
+          rawContent.blocks.forEach(async (block) => {
             const { text, type, inlineStyleRanges, entityRanges } = block;
 
             requests.push({
@@ -60,28 +56,12 @@ function HtmlConvert({ htmlContent }) {
             }),
 
             currentIndex += text.length + 1;
-
-            inlineStyleRanges.forEach(range => {
-              const { offset, length, style } = range;
-            
-              if(!styleObject[style]){
-                //use gemini to create format for new type
-                //add new setting into the style
-              }
-
-              if (styleObject[style]) {
-                requests.push({
-                  "updateTextStyle": {
-                    "textStyle": styleObject[style],
-                    "fields": Object.keys(styleObject[style]).join(','),
-                    "range": {
-                      "startIndex": currentIndex - text.length - 1 + offset,
-                      "endIndex": currentIndex - text.length - 1 + offset + length,
-                    },
-                  }
-                });
-              }
-            });
+            const blockStyle =  await processInlineStyleRanges(inlineStyleRanges, currentIndex - text.length - 1)
+            if (blockStyle.length > 0){
+              requests.push(
+                blockStyle,
+              );
+            }
           });
           console.log(requests);
         }
