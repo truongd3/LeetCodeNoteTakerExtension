@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import ButtonGenerateNote from "./components/ButtonGenerateNote";
-import { generateNote } from "./helper/geminiprompt.js";
+import { generateNote } from "./helper/geminiprompt";
 import getWebpageContent from "./helper/getWebpageContent.js";
 
 function App() {
@@ -19,12 +19,18 @@ function App() {
 
   const handleGenerateNote = async () => {
     const content = await getWebpageContent(tab);
-    console.log("Title:", content.title);
-    console.log("Content:", content.content);
-    console.log("HTML code:", content.html);
-    console.log("Note generated!");
+    // console.log("Title:", content.title);
+    // console.log("Content:", content.content);
+    // console.log("HTML code:", content.html);
+    // console.log("Note generated!");
+    // const note = await generateNote(tab);
+    // console.log(note);
+
     const note = await generateNote(tab);
     console.log(note);
+
+    // const summarizedNote = await summarizeContent(tab);
+    // console.log(summarizedNote)
   };
 
   return (
