@@ -3,10 +3,11 @@
     "version": "1.0.0",
     "name": "LeetCode Note Taker Extension",
     "description": "Capture notes from LeetCode lectures and save them directly to Google Docs. Store solved problems in a GitHub repository and generate hints from saved notes.",
-    "author": ["Truong Dang", "Thai Nguyen", "Uyen Nguyen"],
+    "author": ["Truong Dang", "Thai Nguyen", "Uyen Nguyen", "Van Hoang"],   
     "permissions": [
         "tabs", 
         "scripting",
+        "identity",
         "https://github.com/*",
         "https://api.github.com/*",
         "https://leetcode.com/*",
@@ -14,6 +15,16 @@
         "http://api.github.com/*",
         "http://leetcode.com/*"
     ],
+    "oauth2": {
+        "client_id": "189387838689-slf9g1uo3k99jelpuvb4v0c45qk2ua5l.apps.googleusercontent.com", 
+        "scopes":[
+            "https://www.googleapis.com/auth/documents",
+            "https://www.googleapis.com/auth/documents.readonly",
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.readonly"
+
+        ]
+    },
     "action": {
         "default_popup": "index.html"
     },

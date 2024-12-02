@@ -3,9 +3,13 @@ import "./App.css";
 import ButtonGenerateNote from "./components/ButtonGenerateNote";
 import { generateNote } from "./helper/geminiprompt";
 import getWebpageContent from "./helper/getWebpageContent.js";
+import HtmlConvert from "./htmlConvert.jsx";
+
 
 function App() {
   const [tab, setTab] = useState(null);
+  const [content, setContent] = useState({ title: null, content: null, html: null });
+
   useEffect(() => {
     const fetchTab = async () => {
       const [activeTab] = await chrome.tabs.query({
@@ -18,7 +22,8 @@ function App() {
   }, []);
 
   const handleGenerateNote = async () => {
-    const content = await getWebpageContent(tab);
+    const fetchContent = await getWebpageContent(tab);
+    setContent(fetchContent)
     console.log("Title:", content.title);
     console.log("Content:", content.content);
     // console.log("HTML code:", content.html);
@@ -38,6 +43,8 @@ function App() {
         onClick={handleGenerateNote}
         buttonText="Generate Note"
       />
+      {content.html && (<div> <HtmlConvert htmlContent = {content.html}/> </div>)}
+
     </div>
   );
 }
