@@ -1,35 +1,65 @@
-import PromptAPI from "./PromptAPI";
 import styleObject from "./styleObject";
 
-async function processInlineStyleRanges(ranges, index){
-    const stylelist = []
-    for (const range of ranges){
-        const { offset, length, style } = range;
-        // await PromptAPI();
-        console.log(style);
+async function processInlineStyleRanges(ranges, index) {
+    const styleList = [];
 
-        if(!styleObject[style]){
-        //use gemini to create format for new type
-        //add new setting into the style
-        // PromptAPI();
-        // console.log(1);
+    for (const range of ranges) {
+        const { offset, length, style } = range;
+
+        // Debugging: Check if the style is valid
+        if (!styleObject[style]) {
+            console.log(`This style: ${style} is not found in styleObject.`);
+            
+            // Optional handling for missing styles can go here
+            // You may want to handle special cases like unordered-list-item or list-item
+            // Example handling (uncomment if needed):
+            /*
+            if (style === "unordered-list-item") {
+                styleList.push({
+                    createParagraphBullets: {
+                        range: {
+                            "startIndex": index + offset,
+                            "endIndex": index + offset + length,
+                        },
+                        bulletPreset: 'DISC',
+                    }
+                });
+            }
+            if (style === "list-item") {
+                styleList.push({
+                    createParagraphBullets: {
+                        range: {
+                            "startIndex": index + offset,
+                            "endIndex": index + offset + length,
+                        },
+                        bulletPreset: 'DECIMAL',
+                    }
+                });
+            }
+            */
         }
 
+        // Apply the style if it exists in the styleObject
         if (styleObject[style]) {
-            stylelist.push({
+            console.log(`Applying style: ${style}`);
+            console.log(`Length: ${length}`);
+
+            styleList.push({
                 "updateTextStyle": {
-                "textStyle": styleObject[style],
-                "fields": Object.keys(styleObject[style]).join(','),
-                "range": {
-                    "startIndex": index + offset,
-                    "endIndex": index+ offset + length,
-                },
+                    "textStyle": styleObject[style],
+                    "fields": Object.keys(styleObject[style]).join(','),
+                    "range": {
+                        "startIndex": index + offset,
+                        "endIndex": index + offset + length,
+                    },
                 }
             });
         }
+
+        // Update the index to the next position after the current range
     }
-    console.log("Processed requests:", stylelist);
-    return stylelist;
+
+    return styleList;
 }
 
 export default processInlineStyleRanges;

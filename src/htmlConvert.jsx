@@ -1,87 +1,154 @@
-import React, { useState, useEffect } from 'react';
-import { EditorState, ContentState, convertToRaw } from 'draft-js';
-import { Editor } from "react-draft-wysiwyg";
-import htmlToDraft from 'html-to-draftjs';
-import PromptAPI from './PromptAPI';
-import processInlineStyleRanges from './processInlineStyle'
-import styleObject from './styleObject';
+import React, { useState, useEffect } from "react";
+import { EditorState, ContentState, convertToRaw } from "draft-js";
+// import { Editor } from "react-draft-wysiwyg";
+import htmlToDraft from "html-to-draftjs";
+import processInlineStyleRanges from "./processInlineStyle";
+import styleObject from "./styleObject";
+import FetchDocs from "./fetchDocs";
 
 function HtmlConvert({ htmlContent }) {
   // const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const requests = [];
-  let currentIndex = 0;
+  const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    if (htmlContent) {
-      const html = `<div id="readability-page-1" class="page"><div><div><p><span><span> &nbsp;</span>Insertion in Trie</span><a href="github.com/LeetCode-Feedback/LeetCode-Feedback/issues" target="_blank" rel="noopener noreferrer">Report Issue</a></p></div><div>
-      <h1>We have talked about insertion in a BST in another card (<a href="leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/">Introduction to Data Structure - Binary Search Tree</a>).</h1>
-      <blockquote>
-      <p>Question:</p>
-      <p>Do you remember how to insert a new node in a binary search tree? </p>
-      </blockquote>
-      <p>When we insert a target value into a BST, in each node, we need to decide which child node to go according to the relationship between <code>the value of the node</code> and <code>the target value</code>. Similarly, when we insert a target value into a Trie, we will also decide which path to go depending on <code>the target value</code> we insert.</p>
-      <p>To be more specific, if we insert a string <code>S</code> into Trie, we start with the <code>root</code> node. We will choose a child or add a new child node depending on <code>S[0]</code>, the first character in S. Then we go down to the second node and we will make a choice according to <code>S[1]</code>. Then we go down to the third node, so on and so for. Finally, we traverse all characters in S sequentially and reach the end. The end node will be the node which represents the string S.</p>
-      <p>Here is an example:</p>
-      <center>
-      <div><p><img alt="Current" src="blob:leetcode.com/665eacec-41a7-4eb3-8cde-3b2dd9c2529e"></p><div><p>1 / 5</p></div></div>
-      </center>
-      <p>Let's summarize the strategy using pseudo-code:</p>
-      <div><pre><span></span>1. Initialize: cur = root
-      2. for each char c in target string S:
-      3.      if cur does not have a child c:
-      4.          cur.children[c] = new Trie node
-      5.      cur = cur.children[c]
-      6. cur is the node which represents the string S
-      </pre></div>
+    const processHtmlContent = async () => {
+      if (htmlContent) {
+        const html = `<html>
+        <head>
+          <title>Introduction to Two Pointers in Array and String Problems</title>
+        </head>
+        <body>
+          <h1>Introduction to Two Pointers in Array and String Problems</h1>
+          <section>
+            <h2>What are Two Pointers?</h2>
+            <p>Two pointers are a fundamental technique in algorithms, especially when dealing with arrays and strings. They involve having two integer variables, usually named <code>i</code> and <code>j</code>, or <code>left</code> and <code>right</code>, that move along an iterable (e.g., an array or a string) simultaneously. This allows us to efficiently traverse the data and compare elements.</p>
       
-      <p>Usually, you will need to build the trie by yourself. Building a trie is actually to call the insertion function several times. But remember to <code>initialize a root node</code> before you insert the strings.</p></div></div></div>`;
-      const blocksFromHTML = htmlToDraft(html);
-      if (blocksFromHTML) {
-        const { contentBlocks, entityMap } = blocksFromHTML;
-        if (contentBlocks) {
-          const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
-          const newEditorState = EditorState.createWithContent(contentState);
-          const rawContent = convertToRaw(newEditorState.getCurrentContent());
-
-          rawContent.blocks.forEach(async (block) => {
-            const { text, type, inlineStyleRanges, entityRanges } = block;
-
-            requests.push({
-              "insertText": {
-                "text": text,
-                "location":{
-                  "index": currentIndex, 
-                },
-              }
-            }),
-
-            currentIndex += text.length + 1;
-            const blockStyle =  await processInlineStyleRanges(inlineStyleRanges, currentIndex - text.length - 1)
-            if (blockStyle.length > 0){
-              requests.push(
-                blockStyle,
-              );
+            <h3>Example: Finding a Pair of Numbers in a Sorted Array that Sum to a Target</h3>
+            <p>
+              Given an array of unique integers <code>nums</code> and a target integer <code>target</code>, return <code>true</code> if there exists a pair of numbers in the array that sum to <code>target</code>, and <code>false</code> otherwise.
+            </p>
+      
+            <pre><code>
+            function findPairSum(nums, target) {
+                let left = 0;
+                let right = nums.length - 1;
+      
+                while (left < right) {
+                    if (nums[left] + nums[right] === target) {
+                        return true;
+                    } else if (nums[left] + nums[right] < target) {
+                        left++;
+                    } else {
+                        right--;
+                    }
+                }
+      
+                return false;
             }
-          });
-          console.log(requests);
+            </code></pre>
+      
+            <h3>Example: Determining if a String is a Palindrome</h3>
+            <p>
+              Given a string <code>s</code>, return <code>true</code> if it is a palindrome, <code>false</code> otherwise. A palindrome is a string that reads the same forward as backward. For example: <code>"abcdcba"</code> or <code>"racecar"</code>.
+            </p>
+      
+            <pre><code>
+            function isPalindrome(s) {
+                let left = 0;
+                let right = s.length - 1;
+      
+                while (left < right) {
+                    if (s[left] !== s[right]) {
+                        return false;
+                    }
+                    left++;
+                    right--;
+                }
+      
+                return true;
+            }
+            </code></pre>
+      
+            <h3>Advantages of Two Pointers</h3>
+            <ul>
+              <li><strong>Linear Time Complexity (O(n))</strong>: The two pointers move towards each other, and the number of iterations is bounded by the size of the input. This is often the best possible time complexity for certain problems.</li>
+              <li><strong>Constant Space Complexity (O(1))</strong>: The algorithm uses only a constant number of variables, regardless of the input size.</li>
+            </ul>
+          </section>
+      
+          <footer>
+            <p>This lecture provides a basic introduction to the two pointers technique in algorithms. Two pointers is a versatile tool with many applications, and it's important to understand its underlying principles and how it can be used effectively to solve problems efficiently.</p>
+          </footer>
+        </body>
+      </html>`;
+        const blocksFromHTML = htmlToDraft(html);
+        if (blocksFromHTML) {
+          const { contentBlocks, entityMap } = blocksFromHTML;
+          if (contentBlocks) {
+            const contentState = ContentState.createFromBlockArray(
+              contentBlocks,
+              entityMap
+            );
+            const newEditorState = EditorState.createWithContent(contentState);
+            const rawContent = convertToRaw(newEditorState.getCurrentContent());
+
+            // Collect all requests asynchronously
+            const newRequests = [];
+            let localIndex = 1;
+            for (const block of rawContent.blocks) {
+              const { text, type, inlineStyleRanges } = block;
+
+              // Add insertText request
+              newRequests.push({
+                "insertText": {
+                  "text": text,
+                  "location": { "index": localIndex },
+                },
+              });
+
+              // Add style requests for block type
+              if (styleObject[type]) {
+                newRequests.push({
+                  "updateTextStyle": {
+                    "textStyle": styleObject[type],
+                    "fields": Object.keys(styleObject[type]).join(','),
+                    "range": {
+                      "startIndex": localIndex,
+                      "endIndex": localIndex + text.length-1,
+                    },
+                  },
+                });
+              }
+
+              // Process inline styles
+              const blockStyle = await processInlineStyleRanges(inlineStyleRanges, localIndex);
+              if (blockStyle.length > 0) {
+                newRequests.push(...blockStyle);
+              }
+
+              localIndex += text.length; // Update index
+            }
+
+            // After all requests are collected, update the state
+            setRequests(newRequests);
+          }
         }
       }
     }
+    processHtmlContent();
   }, [htmlContent]);
 
-  // Handle editor state change
-  // const onChange = async (newEditorState) => {
-  //   await setEditorState(newEditorState);
-  // };
+  // Effect to send the requests once they are updated
+  useEffect(() => {
+    if (requests.length > 0) {
+      console.log(requests);
+      FetchDocs(requests);
+    }
+  }, [requests]);
 
   return (
     <div>
       <h1>HTML to Draft.js Editor</h1>
-      {/* <Editor
-        editorState={editorState}
-        readOnly={true} // Makes the editor read-only
-        toolbarHidden={true} // Hides the toolbar
-      /> */}
     </div>
   );
 }
