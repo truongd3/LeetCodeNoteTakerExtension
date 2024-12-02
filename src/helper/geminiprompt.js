@@ -40,8 +40,7 @@ async function analyzeAndSummarizeChunk(chunk) {
 
     try {
         const result = await session.prompt(prompt);
-        console.log(result);
-        return result.trim();
+        return result.replace(/^```html\s*/i, '').replace(/```$/i, '').trim();
     } catch (error) {
         console.error("Error in analyzeChunkWithPromptAPI:", error);
         return [];
@@ -54,20 +53,7 @@ async function analyzeAndSummarizeChunk(chunk) {
 function combineSectionsIntoHTML(sectionsArray) {
     const sections = sectionsArray.join("\n");
 
-    return `
-        <html>
-            <head>
-                <title>Generated Lecture Notes</title>
-            </head>
-            <body>
-                <h1>Generated Lecture Notes</h1>
-                ${sections}
-                <footer>
-                    <p>End of lecture notes.</p>
-                </footer>
-            </body>
-        </html>
-    `;
+    return sections;
 }
 
 // generate note for the whole lecture
