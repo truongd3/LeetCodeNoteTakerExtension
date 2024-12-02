@@ -9,6 +9,7 @@ import FetchDocs from "./fetchDocs";
 function HtmlConvert({ htmlContent }) {
   // const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [requests, setRequests] = useState([]);
+  const title = `testing`;
 
   useEffect(() => {
     const processHtmlContent = async () => {
@@ -97,59 +98,60 @@ function HtmlConvert({ htmlContent }) {
             for (const block of rawContent.blocks) {
               const { text, type, inlineStyleRanges } = block;
 
-              const formattedText = text.endsWith('\n') ? text : `${text}\n`;
+              const formattedText = text.endsWith("\n") ? text : `${text}\n`;
 
               // Add insertText request
               newRequests.push({
-                "insertText": {
-                  "text": formattedText,
-                  "location": { "index": localIndex },
+                insertText: {
+                  text: formattedText,
+                  location: { index: localIndex },
                 },
               });
 
               if (!styleObject[type]) {
-                console.log(`This style: ${type} is not found in styleObject.`);
-                
                 if (type === "unordered-list-item") {
-                    newRequests.push({
-                        createParagraphBullets: {
-                            range: {
-                              "startIndex": localIndex,
-                              "endIndex": localIndex + formattedText.length - 1,
-                            },
-                            bulletPreset: 'BULLET_DISC_CIRCLE_SQUARE',
-                        }
-                    });
+                  newRequests.push({
+                    createParagraphBullets: {
+                      range: {
+                        startIndex: localIndex,
+                        endIndex: localIndex + formattedText.length - 1,
+                      },
+                      bulletPreset: "BULLET_DISC_CIRCLE_SQUARE",
+                    },
+                  });
                 }
                 if (type === "list-item") {
-                    newRequests.push({
-                        createParagraphBullets: {
-                            range: {
-                              "startIndex": localIndex,
-                              "endIndex": localIndex + formattedText.length - 1,
-                            },
-                            bulletPreset: 'NUMBERED_DECIMAL_NESTED',
-                        }
-                    });
+                  newRequests.push({
+                    createParagraphBullets: {
+                      range: {
+                        startIndex: localIndex,
+                        endIndex: localIndex + formattedText.length - 1,
+                      },
+                      bulletPreset: "NUMBERED_DECIMAL_NESTED",
+                    },
+                  });
                 }
               }
 
               // Add style requests for block type
               if (styleObject[type]) {
                 newRequests.push({
-                  "updateTextStyle": {
-                    "textStyle": styleObject[type],
-                    "fields": Object.keys(styleObject[type]).join(','),
-                    "range": {
-                      "startIndex": localIndex,
-                      "endIndex": localIndex + formattedText.length - 1,
+                  updateTextStyle: {
+                    textStyle: styleObject[type],
+                    fields: Object.keys(styleObject[type]).join(","),
+                    range: {
+                      startIndex: localIndex,
+                      endIndex: localIndex + formattedText.length - 1,
                     },
                   },
                 });
               }
 
               // Process inline styles
-              const blockStyle = await processInlineStyleRanges(inlineStyleRanges, localIndex);
+              const blockStyle = await processInlineStyleRanges(
+                inlineStyleRanges,
+                localIndex
+              );
               if (blockStyle.length > 0) {
                 newRequests.push(...blockStyle);
               }
@@ -162,21 +164,20 @@ function HtmlConvert({ htmlContent }) {
           }
         }
       }
-    }
+    };
     processHtmlContent();
   }, [htmlContent]);
 
   // Effect to send the requests once they are updated
   useEffect(() => {
     if (requests.length > 0) {
-      console.log(requests);
-      FetchDocs(requests);
+      FetchDocs(requests, title);
     }
   }, [requests]);
 
   return (
     <div>
-      <h1>HTML to Draft.js Editor</h1>
+      <p>Generate sucessful</p>
     </div>
   );
 }

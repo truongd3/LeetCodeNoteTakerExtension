@@ -11,11 +11,19 @@ async function getAuthToken() {
 }
 
 
-async function FetchDocs(requests) {
+async function FetchDocs(requests, title) {
 
     const token = await getAuthToken();
-    console.log(token);
+    console.log("oath2 token: ", token);
     const fetch_url = `https://docs.googleapis.com/v1/documents`;
+
+    // get current date
+    const dateObj = new Date();
+    const month = dateObj.getMonth() + 1;
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+
+    const dateAndTitle = '[' + month + '/' + day + '/' + year + '] ' + title;
     
     let fetch_options = {
     method: "POST",
@@ -24,7 +32,7 @@ async function FetchDocs(requests) {
         "Content-Type": "application/json",
     },
     body: JSON.stringify({
-        title: "Example of a generated Docs",
+        title: dateAndTitle,
     }),
     };
         
@@ -49,7 +57,6 @@ async function FetchDocs(requests) {
     fetch(fetch_url, fetch_options)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
       });
     }); 
 }
