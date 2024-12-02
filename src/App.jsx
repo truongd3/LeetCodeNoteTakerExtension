@@ -19,12 +19,10 @@ function App() {
 
   const handleGenerateNote = async () => {
     const content = await getWebpageContent(tab);
-    // console.log("Title:", content.title);
-    // console.log("Content:", content.content);
+    console.log("Title:", content.title);
+    console.log("Content:", content.content);
     // console.log("HTML code:", content.html);
     // console.log("Note generated!");
-    // const note = await generateNote(tab);
-    // console.log(note);
 
     const note = await generateNote(tab);
     console.log(note);
