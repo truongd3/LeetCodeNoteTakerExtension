@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import './App.css'
-import ButtonGenerateNote from './components/ButtonGenerateNote';
-import getWebpageContent from './helper/getWebpageContent.js';
-import HtmlConvert from './htmlConvert.jsx';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import ButtonGenerateNote from "./components/ButtonGenerateNote";
+import { generateNote } from "./helper/geminiprompt";
+import getWebpageContent from "./helper/getWebpageContent.js";
+import HtmlConvert from "./htmlConvert.jsx";
+
 
 function App() {
   const [tab, setTab] = useState(null);
@@ -10,7 +12,10 @@ function App() {
 
   useEffect(() => {
     const fetchTab = async () => {
-      const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      const [activeTab] = await chrome.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
       setTab(activeTab);
     };
     fetchTab();
@@ -21,18 +26,27 @@ function App() {
     setContent(fetchContent)
     console.log("Title:", content.title);
     console.log("Content:", content.content);
-    console.log("HTML code:", content.html);
-    console.log("Note generated!");
+    // console.log("HTML code:", content.html);
+    // console.log("Note generated!");
+
+    const note = await generateNote(tab);
+    console.log(note);
+
+    // const summarizedNote = await summarizeContent(tab);
+    // console.log(summarizedNote)
   };
 
   return (
     <div className="App">
       <h1>LeetCode Note Taker</h1>
-      <ButtonGenerateNote onClick={handleGenerateNote} buttonText="Generate Note" />
-      {content.html && (<div>
-        <HtmlConvert htmlContent = {content.html}/> </div>)}
+      <ButtonGenerateNote
+        onClick={handleGenerateNote}
+        buttonText="Generate Note"
+      />
+      {content.html && (<div> <HtmlConvert htmlContent = {content.html}/> </div>)}
+
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

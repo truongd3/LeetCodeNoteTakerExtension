@@ -17,8 +17,14 @@ async function getWebpageContent(tab) {
         throw new Error("Could not extract readable content from the page");
     }
 
+    let extractedTitle = "";
+    const titleElement = doc.querySelector("span.content-title");
+    if (titleElement) {
+        extractedTitle = titleElement.textContent.trim().replace(/\u00A0/g, ""); // Remove non-breaking spaces (&nbsp;)
+    }
+
     return {
-        title: article.title,
+        title: extractedTitle || article.title, // actual title of lecture (not of tab)
         content: article.textContent,
         html: article.content
     };
