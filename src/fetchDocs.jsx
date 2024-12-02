@@ -24,7 +24,7 @@ async function FetchDocs(requests) {
         "Content-Type": "application/json",
     },
     body: JSON.stringify({
-        title: "Example of a Doc created programmatically9",
+        title: "Example of a generated Docs",
     }),
     };
         

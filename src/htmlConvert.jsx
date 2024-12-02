@@ -49,7 +49,7 @@ function HtmlConvert({ htmlContent }) {
       
             <h3>Example: Determining if a String is a Palindrome</h3>
             <p>
-              Given a string <code>s</code>, return <code>true</code> if it is a palindrome, <code>false</code> otherwise. A palindrome is a string that reads the same forward as backward. For example: <code>"abcdcba"</code> or <code>"racecar"</code>.
+              Given a string <code>s</code>, return <code>true</code> if it is a palindrome, <code>false</code> otherwise. A palindrome is a string that reads the same forward as backward. For example: <code>"abcdcba"</code> or <code>"racecar"</code>
             </p>
       
             <pre><code>
@@ -92,19 +92,47 @@ function HtmlConvert({ htmlContent }) {
             const newEditorState = EditorState.createWithContent(contentState);
             const rawContent = convertToRaw(newEditorState.getCurrentContent());
 
-            // Collect all requests asynchronously
             const newRequests = [];
             let localIndex = 1;
             for (const block of rawContent.blocks) {
               const { text, type, inlineStyleRanges } = block;
 
+              const formattedText = text.endsWith('\n') ? text : `${text}\n`;
+
               // Add insertText request
               newRequests.push({
                 "insertText": {
-                  "text": text,
+                  "text": formattedText,
                   "location": { "index": localIndex },
                 },
               });
+
+              if (!styleObject[type]) {
+                console.log(`This style: ${type} is not found in styleObject.`);
+                
+                if (type === "unordered-list-item") {
+                    newRequests.push({
+                        createParagraphBullets: {
+                            range: {
+                              "startIndex": localIndex,
+                              "endIndex": localIndex + formattedText.length - 1,
+                            },
+                            bulletPreset: 'BULLET_DISC_CIRCLE_SQUARE',
+                        }
+                    });
+                }
+                if (type === "list-item") {
+                    newRequests.push({
+                        createParagraphBullets: {
+                            range: {
+                              "startIndex": localIndex,
+                              "endIndex": localIndex + formattedText.length - 1,
+                            },
+                            bulletPreset: 'NUMBERED_DECIMAL_NESTED',
+                        }
+                    });
+                }
+              }
 
               // Add style requests for block type
               if (styleObject[type]) {
@@ -114,7 +142,7 @@ function HtmlConvert({ htmlContent }) {
                     "fields": Object.keys(styleObject[type]).join(','),
                     "range": {
                       "startIndex": localIndex,
-                      "endIndex": localIndex + text.length-1,
+                      "endIndex": localIndex + formattedText.length - 1,
                     },
                   },
                 });
@@ -126,7 +154,7 @@ function HtmlConvert({ htmlContent }) {
                 newRequests.push(...blockStyle);
               }
 
-              localIndex += text.length; // Update index
+              localIndex += formattedText.length; // Update index
             }
 
             // After all requests are collected, update the state

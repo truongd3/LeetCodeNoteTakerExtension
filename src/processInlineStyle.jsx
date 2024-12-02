@@ -6,14 +6,9 @@ async function processInlineStyleRanges(ranges, index) {
     for (const range of ranges) {
         const { offset, length, style } = range;
 
-        // Debugging: Check if the style is valid
         if (!styleObject[style]) {
             console.log(`This style: ${style} is not found in styleObject.`);
             
-            // Optional handling for missing styles can go here
-            // You may want to handle special cases like unordered-list-item or list-item
-            // Example handling (uncomment if needed):
-            /*
             if (style === "unordered-list-item") {
                 styleList.push({
                     createParagraphBullets: {
@@ -21,7 +16,7 @@ async function processInlineStyleRanges(ranges, index) {
                             "startIndex": index + offset,
                             "endIndex": index + offset + length,
                         },
-                        bulletPreset: 'DISC',
+                        bulletPreset: 'BULLET_DISC_CIRCLE_SQUARE',
                     }
                 });
             }
@@ -32,14 +27,11 @@ async function processInlineStyleRanges(ranges, index) {
                             "startIndex": index + offset,
                             "endIndex": index + offset + length,
                         },
-                        bulletPreset: 'DECIMAL',
+                        bulletPreset: 'NUMBERED_DECIMAL_NESTED',
                     }
                 });
             }
-            */
         }
-
-        // Apply the style if it exists in the styleObject
         if (styleObject[style]) {
             console.log(`Applying style: ${style}`);
             console.log(`Length: ${length}`);
@@ -55,8 +47,6 @@ async function processInlineStyleRanges(ranges, index) {
                 }
             });
         }
-
-        // Update the index to the next position after the current range
     }
 
     return styleList;
