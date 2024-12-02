@@ -16,7 +16,7 @@
         "http://leetcode.com/*"
     ],
     "oauth2": {
-        "client_id": "189387838689-slf9g1uo3k99jelpuvb4v0c45qk2ua5l.apps.googleusercontent.com", 
+        "client_id": "189387838689-6s4lfbffns24pod0ifqigt7e6d89h20q.apps.googleusercontent.com", 
         "scopes":[
             "https://www.googleapis.com/auth/documents",
             "https://www.googleapis.com/auth/documents.readonly",
