@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import ButtonGenerateNote from "./components/ButtonGenerateNote";
 import { generateNote } from "./helper/geminiprompt";
-import getWebpageContent from "./helper/getWebpageContent.js";
 import HtmlConvert from "./toDocs/htmlConvert.jsx";
 
 
 function App() {
   const [tab, setTab] = useState(null);
-  const [content, setContent] = useState({ title: null, content: null, html: null });
+  const [content, setContent] = useState({ title: null, finalHTML: null });
 
   useEffect(() => {
     const fetchTab = async () => {
@@ -22,18 +21,8 @@ function App() {
   }, []);
 
   const handleGenerateNote = async () => {
-    const fetchContent = await getWebpageContent(tab);
-    setContent(fetchContent)
-    console.log("Title:", content.title);
-    console.log("Content:", content.content);
-    // console.log("HTML code:", content.html);
-    // console.log("Note generated!");
-
-    const note = await generateNote(tab);
-    console.log(note);
-
-    // const summarizedNote = await summarizeContent(tab);
-    // console.log(summarizedNote)
+    const generatedNote = await generateNote(tab);
+    setContent(generatedNote);
   };
 
   return (
@@ -43,8 +32,7 @@ function App() {
         onClick={handleGenerateNote}
         buttonText="Generate Note"
       />
-      {content.html && (<div> <HtmlConvert content = {content}/> </div>)}
-
+      {content.finalHTML && (<div><HtmlConvert htmlContent={content.finalHTML} title={content.title}/></div>)}
     </div>
   );
 }
