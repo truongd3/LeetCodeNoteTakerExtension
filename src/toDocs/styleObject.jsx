@@ -8,6 +8,7 @@ const styleObject = {
     "header-two": {"bold": true, 'fontSize': { 'magnitude': 16, 'unit': 'PT'}},
     "header-three": {"bold": true, 'fontSize': { 'magnitude': 14, 'unit': 'PT'}},
     "header-four": {"bold": true, 'fontSize': { 'magnitude': 12, 'unit': 'PT'}},
+    "unstyled" : {'fontSize': { 'magnitude': 12, 'unit': 'PT'}}
 }
   
 export default styleObject;
