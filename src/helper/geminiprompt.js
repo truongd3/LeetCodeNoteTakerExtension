@@ -1,6 +1,5 @@
 import getWebpageContent from "./getWebpageContent.js";
 
-// divide the input into smaller chunks
 function divideIntoChunks(content, maxChunkSize = 4096) {
     const chunks = [];
     while (content.length > 0) {
@@ -10,16 +9,17 @@ function divideIntoChunks(content, maxChunkSize = 4096) {
     return chunks;
 }
 
-// generate notes for each chunk
 async function analyzeAndSummarizeChunk(chunk) {
     const prompt = `
     Generate lecture notes from the following content in a structured HTML format. 
-    Use proper semantic HTML tags, including headings, paragraphs, and code blocks where pseudocode exists. 
-    Follow this structure:
+    Use proper semantic HTML tags, including headings, paragraphs, and code blocks where pseudocode exists.
+    Don't include any CSS syntax, styling formats, HTML comments, class, or id.
+    Generate note that is as neat as possible.
+    Follow strictly this structure:
     <div>
         <section>
             <h2>Section Name 1</h2>
-            <p>Brief summary or content of the section.</p>
+            <p>Brief summary of the section.</p>
             <pre><code>Include any pseudocode exactly as it appears, if present. Leave empty if no pseudocode exists.</code></pre>
         </section>
         <section>
@@ -35,7 +35,7 @@ async function analyzeAndSummarizeChunk(chunk) {
     `;
 
     const session = await ai.languageModel.create({
-        systemPrompt: "You are an assistant specialized in generating lecture notes.",
+        systemPrompt: "You are an assistant specialized in generating LeetCode lecture notes.",
     });
 
     try {
@@ -49,23 +49,20 @@ async function analyzeAndSummarizeChunk(chunk) {
     }
 }
 
-// helper function to combine all the html chunks to one whole html code for the lecture
 function combineSectionsIntoHTML(sectionsArray) {
     const sections = sectionsArray.join("\n");
-
     return sections;
 }
 
-// generate note for the whole lecture
-export async function generateNote(tab, maxChunkSize = 4096) {
+export async function generateNote(tab, maxChunkSize = 4000) {
     try {
-        const content = await getWebpageContent(tab); // get the content
+        const content = await getWebpageContent(tab);
+        console.log("Title:", content.title);
+        console.log("HTML code:", content.html);
 
-        // divide into smaller chunk
         const chunks = divideIntoChunks(content.content, maxChunkSize);
 
         let allSections = [];
-        // iterate through each chunk and add to the section array
         for (const chunk of chunks) {
             const sectionHTML = await analyzeAndSummarizeChunk(chunk);
 
@@ -73,11 +70,10 @@ export async function generateNote(tab, maxChunkSize = 4096) {
                 allSections.push(sectionHTML.trim());
             }
         }
-        // combine all the html small parts into a whole html for the lecture
         const finalHTML = combineSectionsIntoHTML(allSections);
 
-        console.log("Generated HTML:", finalHTML);
-        return finalHTML;
+        // console.log("Generated HTML:", finalHTML);
+        return {finalHTML: finalHTML, title: content.title};
     } catch (error) {
         console.error("Failed to generate lecture notes:", error);
         return null;
