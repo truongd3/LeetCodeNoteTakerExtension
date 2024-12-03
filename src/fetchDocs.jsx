@@ -58,8 +58,7 @@ async function FetchDocs(requests, title) {
     fetch(fetch_url, fetch_options)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
-        openGoogleDoc(res.documentId);
+        
       });
     }); 
 }

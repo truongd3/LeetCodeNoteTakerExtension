@@ -6,10 +6,12 @@ import processInlineStyleRanges from "./processInlineStyle";
 import styleObject from "./styleObject";
 import FetchDocs from "./fetchDocs";
 
-function HtmlConvert({ htmlContent }) {
+function HtmlConvert({ content }) {
   // const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [requests, setRequests] = useState([]);
-  const title = `testing`;
+  console.log(content);
+  const title = content.title;
+  const htmlContent = content.html;
 
   useEffect(() => {
     const processHtmlContent = async () => {
