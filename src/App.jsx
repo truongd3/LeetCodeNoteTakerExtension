@@ -27,7 +27,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>LeetCode Note Taker</h1>
+      <h1>LeetCode<br></br>Note Taker</h1>
       <ButtonGenerateNote
         onClick={handleGenerateNote}
         buttonText="Generate Note"

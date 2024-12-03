@@ -11,6 +11,11 @@
         "https://leetcode.com/*",
         "http://leetcode.com/*"
     ],
+    "icons": {
+        "16": "logo.png",
+        "48": "logo.png",
+        "128": "logo.png"
+    },
     "oauth2": {
         "client_id": "189387838689-ht4rt6hfgasahto4pu55qd95cl7f3i2h.apps.googleusercontent.com", 
         "scopes":[
@@ -21,7 +26,12 @@
         ]
     },
     "action": {
-        "default_popup": "index.html"
+        "default_popup": "index.html",
+        "default_icon": {
+            "16": "logo.png",
+            "48": "logo.png",
+            "128": "logo.png"
+        }
     },
     "host_permissions": [
         "http://*/*",

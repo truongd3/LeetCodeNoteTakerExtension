@@ -1,3 +1,8 @@
+@font-face {
+  font-family: "ITC Bauhaus";
+  src: url("styles/font/BauhausStd-Bold.ttf") format("truetype");
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -5,37 +10,9 @@
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
 .generate-note-button {
-  background-color: #4CAF50; /* Default button background */
-  color: white; /* Default text color */
+  background-color: #34a853;
+  color: white;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -43,14 +20,23 @@
   cursor: pointer;
   transition: opacity 0.3s ease;
 }
-
 .generate-note-button:hover {
-  background-color: #45a049; /* Darker shade on hover */
+  background-color: #81c995;
+}
+.generate-note-button:disabled {
+  background-color: #d3d3d3;
+  color: #7a7a7a;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
-.generate-note-button:disabled {
-  background-color: #d3d3d3; /* Gray background when disabled */
-  color: #7a7a7a; /* Gray text color when disabled */
-  cursor: not-allowed; /* Change cursor to not-allowed */
-  opacity: 0.6; /* Reduced opacity for a "disabled" look */
+h1 {
+  font-family: 'ITC Bauhaus', sans-serif;
+  font-size: 3.6em;
+  line-height: 1.1;
+}
+
+#successful-generate {
+  font-size: 2em;
+  color: #34a853;
 }

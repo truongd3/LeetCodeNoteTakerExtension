@@ -95,7 +95,7 @@ function HtmlConvert({ htmlContent, title }) {
 
   return (
     <div>
-      <p>Generate sucessful!</p>
+      <p id="successful-generate">Generate sucessful!</p>
     </div>
   );
 }
