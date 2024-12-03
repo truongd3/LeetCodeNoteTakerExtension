@@ -1,4 +1,4 @@
-export function openGoogleDoc(documentID) {
+function openGoogleDoc(documentID) {
     if (!documentID) {
         console.error("Document ID is required to open the Google Doc.");
         return;
@@ -8,3 +8,5 @@ export function openGoogleDoc(documentID) {
 
     window.open(googleDocsUrl, "_blank");
 }
+
+export default openGoogleDoc;

@@ -3,7 +3,7 @@ import "./App.css";
 import ButtonGenerateNote from "./components/ButtonGenerateNote";
 import { generateNote } from "./helper/geminiprompt";
 import getWebpageContent from "./helper/getWebpageContent.js";
-import HtmlConvert from "./htmlConvert.jsx";
+import HtmlConvert from "./toDocs/htmlConvert.jsx";
 
 
 function App() {
@@ -43,7 +43,7 @@ function App() {
         onClick={handleGenerateNote}
         buttonText="Generate Note"
       />
-      {content.html && (<div> <HtmlConvert htmlContent = {content.html}/> </div>)}
+      {content.html && (<div> <HtmlConvert content = {content}/> </div>)}
 
     </div>
   );
