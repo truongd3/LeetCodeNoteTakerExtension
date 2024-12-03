@@ -18,7 +18,7 @@ async function FetchDocs(requests, title) {
   const token = await getAuthToken();
   console.log("oath2 token: ", token);
   
-  const folderId = await getOrCreateFolder(token, "topics");
+  const folderId = await getOrCreateFolder(token, "LeetCode Notes");
 
   // get current date
   const dateObj = new Date();
@@ -26,7 +26,7 @@ async function FetchDocs(requests, title) {
   const day = dateObj.getDate();
   const year = dateObj.getFullYear();
 
-  const dateAndTitle = '[' + month + '/' + day + '/' + year + '] ' + title;
+  const dateAndTitle = '[' + year + '/' + month + '/' + day + '] ' + title;
 
   const createUrl = `https://www.googleapis.com/drive/v3/files`;
   const fileMetadata = {
