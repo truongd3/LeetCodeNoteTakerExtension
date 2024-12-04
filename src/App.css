@@ -11,7 +11,7 @@
 }
 
 .generate-note-button {
-  background-color: #34a853;
+  background-color: var(--FRESH_GREEN);
   color: white;
   padding: 10px 20px;
   border: none;
@@ -21,7 +21,7 @@
   transition: opacity 0.3s ease;
 }
 .generate-note-button:hover {
-  background-color: #81c995;
+  background-color: var(--LIGHT_GREEN);
 }
 .generate-note-button:disabled {
   background-color: #d3d3d3;
@@ -38,5 +38,5 @@ h1 {
 
 #successful-generate {
   font-size: 2em;
-  color: #34a853;
+  color: var(--FRESH_GREEN);
 }
