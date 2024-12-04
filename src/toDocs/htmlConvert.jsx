@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import FetchDocs from "./fetchDocs";
 import processInlineStyleRanges from "./processInlineStyle";
 import styleObject from "./styleObject";
-import FetchDocs from "./fetchDocs";
 import Spinner from "../components/Spinner.jsx";
 
 function HtmlConvert({ htmlContent, title }) {
