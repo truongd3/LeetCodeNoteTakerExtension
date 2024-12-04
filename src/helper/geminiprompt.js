@@ -13,7 +13,7 @@ async function analyzeAndSummarizeChunk(chunk) {
     const prompt = `
     Generate lecture notes from the following content in a structured HTML format. 
     Use proper semantic HTML tags, including headings, paragraphs, and code blocks where pseudocode exists.
-    Don't include any CSS syntax, styling formats, HTML comments, class, or id.
+    Don't include any !DOCTYPE tag, html tags, CSS syntax, styling formats, HTML comments, class, or id.
     Generate note that is as neat as possible.
     Follow strictly this structure:
     <div>
@@ -49,9 +49,12 @@ async function analyzeAndSummarizeChunk(chunk) {
     }
 }
 
-function combineSectionsIntoHTML(sectionsArray) {
+function combineSectionsIntoHTML(sectionsArray, title) {
     const sections = sectionsArray.join("\n");
-    return sections;
+    return `
+        <h1>${title}</h1>
+        ${sections}
+`;
 }
 
 export async function generateNote(tab, maxChunkSize = 4000) {
@@ -61,7 +64,6 @@ export async function generateNote(tab, maxChunkSize = 4000) {
         console.log("HTML code:", content.html);
 
         const chunks = divideIntoChunks(content.content, maxChunkSize);
-
         let allSections = [];
         for (const chunk of chunks) {
             const sectionHTML = await analyzeAndSummarizeChunk(chunk);
@@ -70,13 +72,10 @@ export async function generateNote(tab, maxChunkSize = 4000) {
                 allSections.push(sectionHTML.trim());
             }
         }
-        const finalHTML = combineSectionsIntoHTML(allSections);
-
-        // console.log("Generated HTML:", finalHTML);
-        return {finalHTML: finalHTML, title: content.title};
+        const finalHTML = combineSectionsIntoHTML(allSections, content.title);
+        return { finalHTML: finalHTML, title: content.title };
     } catch (error) {
         console.error("Failed to generate lecture notes:", error);
         return null;
     }
 }
-
