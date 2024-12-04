@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { EditorState, ContentState, convertToRaw } from "draft-js";
+import { ContentState, convertToRaw, EditorState } from "draft-js";
 import htmlToDraft from "html-to-draftjs";
+import React, { useEffect, useState } from "react";
+import FetchDocs from "./fetchDocs";
 import processInlineStyleRanges from "./processInlineStyle";
 import styleObject from "./styleObject";
-import FetchDocs from "./fetchDocs";
 
 function HtmlConvert({ htmlContent, title }) {
   const [requests, setRequests] = useState([]);

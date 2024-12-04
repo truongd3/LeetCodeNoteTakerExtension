@@ -7,6 +7,7 @@ async function processInlineStyleRanges(ranges, index) {
     const { offset, length, style } = range;
 
     if (!styleObject[style]) {
+      console.log(style);
       if (style === "unordered-list-item") {
         styleList.push({
           createParagraphBullets: {
